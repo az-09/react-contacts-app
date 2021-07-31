@@ -1,0 +1,306 @@
+list all globally installed modules 
+npm ls -g --depth 0
+
+'React' must be in scope when using JSX react/react-in-jsx-scope?
+.eslintrc.json
+
+    rules: {
+        // suppress errors for missing 'import React' in files
+        "react/react-in-jsx-scope": "off",
+        // allow jsx syntax in js files (for next.js project)
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }], //should add ".ts" if typescript project
+    }
+
+Video 5 Semantic UI React Tutorial. Fully featured React Project Tutorial
+https://www.youtube.com/watch?v=H7kqE4JEqDw
+https://react.semantic-ui.com/usage
+
+- select all occurrences of selected word in VSCode 
+command + shift + L 
+
+- rafce
+react arrow function export
+
+- ContactsHeader.js
+# Link to each URI
+import React from 'react';
+import { Link } from 'react-router-dom';
+import {
+  Button, Icon, Image, Menu,
+} from 'semantic-ui-react';
+import logo from '../../assets/images/logo.svg';
+
+const ContactsHeader = () => (
+
+  <Menu secondary pointing>
+    <Image src={logo} width={60} />
+    <Menu.Item as={Link} to="/" style={{ fontSize: 24 }}>ME Contacts</Menu.Item>
+    <Menu.Item position="right">
+      <Button as={Link} to="/contacts/create" primary icon basic>
+        <Icon name="add" />
+        Create Contact
+      </Button>
+    </Menu.Item>
+    <Menu.Item>
+      {' '}
+      <Button icon basic color="red">
+        <Icon name="log out" />
+        Logout
+      </Button>
+    </Menu.Item>
+
+  </Menu>
+);
+
+export default ContactsHeader;
+
+
+Video 6 Context API  Setup (Multiple Reducers). Fully featured React Project Tutorial
+https://www.youtube.com/watch?v=HbVWd7qKLU4
+# Provider, initialStates, Reducers
+
+- context/authInitialState.js
+export default {
+  auth: {
+    loading: false,
+    user: null,
+  },
+};
+
+- context/authReducer.js
+const auth = (state, action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
+
+export default auth;
+
+- context/Provider.js
+import React, { createContext, useReducer } from 'react';
+import authInitialState from './initialStates/authInitialState';
+import auth from './reducers/auth';
+
+export const GlobalContext = createContext({});
+
+export const GlobalProvider = ({ children }) => {
+  const [authState, authDispatch] = useReducer(auth, authInitialState);
+
+  return (
+    <GlobalContext.Provider value={{
+      authState,
+      authDispatch,
+    }}
+    >
+      {children}
+    </GlobalContext.Provider>
+  );
+};
+
+
+- App.js
+...
+import { GlobalProvider } from './context/Provider';
+
+function App() {
+  return (
+    <GlobalProvider>
+      ...
+    </GlobalProvider>
+  );
+}
+
+export default App;
+
+
+Video 7 Semantic UI Form, Registering a user 1. Fully featured React Project Tutorial
+https://www.youtube.com/watch?v=A6IgQJG4XuE
+https://react.semantic-ui.com/collections/form/#types-form
+
+- hooks/useForm.js
+import { useState } from 'react';
+
+export default () => {
+  const [form, setForm] = useState({});
+
+  const onChange = (e, { name, value }) => {
+    setForm({ ...form, [name]: value });
+  };
+
+  // eslint-disable-next-line max-len
+  const registerFormValid = !form.username?.length
+        || !form.fistname?.length
+        || !form.lastname?.length
+        || !form.email?.length
+        || !form.password?.length;
+
+   return { form, onChange, registerFormValid };
+};
+
+- Register.js
+...
+import useForm from '../hooks/useForm';
+...
+<RegisterForm form={useForm()} />
+
+- RegisterForm.js
+...
+const RegisterForm = ({ form: { form, onChange, registerFormValid } }) => (
+  <div>
+    <ContactsHeader />
+    <Grid centered>
+      <Grid.Column style={{ maxWidth: 550, marginTop: 20 }}>
+        <Header>Signup Here</Header>
+        <Segment>
+          <Form>
+            <Form.Field>
+              <Form.Input value={form.username || ''} onChange={onChange} name="username" placeholder="Username" label="Username" />
+            </Form.Field>
+            <Form.Field>
+              <Form.Input value={form.fistname || ''} onChange={onChange} name="fistname" placeholder="First Name" label="First Name" />
+            </Form.Field>
+            <Form.Field>
+              <Form.Input value={form.lastname || ''} onChange={onChange} name="lastname" placeholder="Last Name" label="Last Name" />
+            </Form.Field>
+            <Form.Field>
+              <Form.Input value={form.email || ''} onChange={onChange} name="email" type="email" placeholder="Email" label="Email" />
+            </Form.Field>
+            <Form.Field>
+              <Form.Input value={form.password || ''} onChange={onChange} name="password" type="password" placeholder="Password" label="Password" />
+            </Form.Field>
+
+            <Button disabled={registerFormValid} fluid primary type="submit">Submit</Button>
+          </Form>
+        </Segment>
+      </Grid.Column>
+    </Grid>
+
+  </div>
+);
+
+export default RegisterForm;
+
+
+Video 8 React Authentication (User Registration) 2. Fully featured React Project Tutorial
+https://www.youtube.com/watch?v=SoJ4Wk8ycoE
+
+- register.js
+..
+import register from '../context/actions/register';
+import { GlobalContext } from '../context/Provider';
+...
+  const { authDispatch } = useContext(GlobalContext);
+  ...
+  const onSubmit = () => {
+    register(form)(authDispatch);
+  };
+
+  return {
+    ..., onSubmit,
+  };
+};
+
+- register.js
+...
+const register = ({
+  email, password, username, lastname: last_name, firstname: first_name,
+}) => (dispatch) => {
+  axiosInstance.post('/auth/register', {
+    email, password, username, last_name, first_name,
+  ...
+};
+
+- RegisterForm.js
+...
+const RegisterForm = ({
+  form: {
+    ..., onSubmit,
+  },
+}) => (
+  ...
+   <Button onClick={onSubmit} ...
+
+Video 8 React Authentication (User Registration) 2. Fully featured React Project Tutorial
+https://www.youtube.com/watch?v=SoJ4Wk8ycoE
+
+- Provider: 
+      authState # new state from authDispatch 
+      authDispatch (authReducer, authInitialState) # way to calculate and initial values
+  -> useForm onSubmit calls register
+  -> register:action (form)(authDispatch) 
+  -> register{email, password, ... }(authDispatch)
+
+- register.js
+const register = ({email, password, username, lastname: last_name, firstname: first_name}) => (authDispatch) => {
+  authDispatch({
+    type: REGISTER_LOADING,
+  });
+
+  axiosInstance.post('/auth/register', {
+    email, password, username, last_name, first_name,
+  })
+    .then((res) => {
+      authDispatch({
+        type: REGISTER_SUCCESS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      authDispatch({
+        type: REGISTER_ERROR,
+        payload: err.response.data,
+      });
+    });
+};
+
+- useForm.js
+...
+  const [form, setForm] = useState({});
+  const [fieldErrors, setFieldErrors] = useState({});
+
+ const history = useHistory();
+
+ useEffect(() => {
+    if (error) {
+      Object.entries(error).forEach(([name, value]) => {
+        setFieldErrors({ ...fieldErrors, [name]: value[0] });
+      });
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (data) {
+      history.push('/auth/login');
+    }
+  }, [data]);
+  ...
+  const onSubmit = () => {
+    setFieldErrors({});
+    register(form)(authDispatch);
+  };
+
+  return {
+    ..., onSubmit, loading, fieldErrors,
+  };
+
+- Register.js
+...
+const {
+    form, onChange, registerFormValid, onSubmit, loading, fieldErrors,
+  } = useForm();
+...
+<Form.Input
+    ...
+    error={fieldErrors.username && {
+      content: fieldErrors.username, poiting: 'below',
+    }}
+  />
+...
+<Button onClick={onSubmit} disabled={registerFormValid || loading} fluid loading={loading} ...
+
+Video 9 React Authentication (User Login). Fully featured React Project Tutorial
+https://www.youtube.com/watch?v=NpSx_BVAThc
+
+
+
