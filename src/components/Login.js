@@ -3,6 +3,7 @@ import React from 'react';
 import {
   Button, Form, Grid, Header, Message, Segment,
 } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import useLoginForm from '../hooks/useLoginForm';
 import ContactsHeader from './ContactsHeader';
 
@@ -12,7 +13,7 @@ const Login = () => {
   } = useLoginForm();
   return (
 
-    <div>
+    <>
       <ContactsHeader />
       <Grid centered>
         <Grid.Column style={{ maxWidth: 550, marginTop: 20 }}>
@@ -44,12 +45,18 @@ const Login = () => {
               </Form.Field>
 
               <Button onClick={onSubmit} disabled={loginFormValid || loading} fluid loading={loading} primary type="submit">Submit</Button>
+              <Segment>
+                Need an account
+                {' '}
+                <Link to="/auth/register">Register</Link>
+              </Segment>
             </Form>
           </Segment>
+
         </Grid.Column>
       </Grid>
 
-    </div>
+    </>
   );
 };
 export default Login;

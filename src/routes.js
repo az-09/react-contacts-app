@@ -1,28 +1,32 @@
-import ContactsContainer from './components/Contacts';
-import CreateContactContainer from './components/CreateContact';
-import LoginContainer from './components/Login';
-import RegisterContainer from './components/Register';
+import Contacts from './components/Contacts';
+import CreateContact from './components/CreateContact';
+import Login from './components/Login';
+import Register from './components/Register';
 
 const routes = [
   {
     path: '/auth/register',
-    component: RegisterContainer,
+    component: Register,
     title: 'Register',
+    needsAuth: false,
   },
   {
     path: '/auth/login',
-    component: LoginContainer,
+    component: Login,
     title: 'Login',
+    needsAuth: false,
   },
   {
     path: '/',
-    component: ContactsContainer,
+    component: Contacts,
     title: 'Contacts',
+    needsAuth: true,
   },
   {
     path: '/contacts/create',
-    component: CreateContactContainer,
+    component: CreateContact,
     title: 'Create Contact',
+    needsAuth: true,
   },
 ];
 

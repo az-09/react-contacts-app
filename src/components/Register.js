@@ -3,6 +3,7 @@ import React from 'react';
 import {
   Button, Form, Grid, Header, Segment,
 } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import useForm from '../hooks/useRegisterForm';
 import ContactsHeader from './ContactsHeader';
 
@@ -12,7 +13,7 @@ const Register = () => {
   } = useForm();
   return (
 
-    <div>
+    <>
       <ContactsHeader />
       <Grid centered>
         <Grid.Column style={{ maxWidth: 550, marginTop: 20 }}>
@@ -27,7 +28,7 @@ const Register = () => {
                   placeholder="Username"
                   label="Username"
                   error={fieldErrors.username && {
-                    content: fieldErrors.username, poiting: 'below',
+                    content: fieldErrors.username, pointing: 'below',
                   }}
                 />
               </Form.Field>
@@ -39,7 +40,7 @@ const Register = () => {
                   placeholder="First Name"
                   label="First Name"
                   error={fieldErrors.firstname && {
-                    content: fieldErrors.firstname, poiting: 'below',
+                    content: fieldErrors.firstname, pointing: 'below',
                   }}
                 />
               </Form.Field>
@@ -51,7 +52,7 @@ const Register = () => {
                   placeholder="Last Name"
                   label="Last Name"
                   error={fieldErrors.lastname && {
-                    content: fieldErrors.lastname, poiting: 'below',
+                    content: fieldErrors.lastname, pointing: 'below',
                   }}
                 />
               </Form.Field>
@@ -64,7 +65,7 @@ const Register = () => {
                   placeholder="Email"
                   label="Email"
                   error={fieldErrors.email && {
-                    content: fieldErrors.email, poiting: 'below',
+                    content: fieldErrors.email, pointing: 'below',
                   }}
                 />
               </Form.Field>
@@ -77,18 +78,24 @@ const Register = () => {
                   placeholder="Password"
                   label="Password"
                   error={fieldErrors.password && {
-                    content: fieldErrors.password, poiting: 'below',
+                    content: fieldErrors.password, pointing: 'below',
                   }}
                 />
               </Form.Field>
 
               <Button onClick={onSubmit} disabled={registerFormValid || loading} fluid loading={loading} primary type="submit">Submit</Button>
+              <Segment>
+                Already have an account?
+                {' '}
+
+                <Link to="/auth/login">Login</Link>
+              </Segment>
             </Form>
           </Segment>
         </Grid.Column>
       </Grid>
 
-    </div>
+    </>
   );
 };
 export default Register;

@@ -1,5 +1,5 @@
-import axiosInstance from '../../helpers/axios';
-import { REGISTER_LOADING, REGISTER_SUCCESS, REGISTER_ERROR } from '../actionTypes';
+import axiosInstance from '../helpers/axiosInstance';
+import { REGISTER_LOADING, REGISTER_SUCCESS, REGISTER_ERROR } from '../context/actionTypes';
 
 const register = ({
   // eslint-disable-next-line camelcase
@@ -10,7 +10,7 @@ const register = ({
     type: REGISTER_LOADING,
   });
 
-  axiosInstance.post('/auth/register', {
+  axiosInstance().post('/auth/register', {
     email, password, username, last_name, first_name,
   })
     .then((res) => {

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import register from '../context/actions/register';
+import register from '../services/register';
 import { GlobalContext } from '../context/Provider';
 
 export default () => {

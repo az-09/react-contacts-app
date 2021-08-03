@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import login from '../context/actions/login';
+import login from '../services/login';
 import { GlobalContext } from '../context/Provider';
 
 export default () => {
@@ -9,10 +9,11 @@ export default () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (data && data.user) {
+    // if no localStorage.token, endless loop when log out
+    if (localStorage.token && data && data.user) {
       history.push('/');
     }
-  });
+  }, [data]);
 
   const onChange = (e, { name, value }) => {
     setForm({ ...form, [name]: value });
@@ -21,7 +22,6 @@ export default () => {
   const loginFormValid = !form.username?.length || !form.password?.length;
 
   const onSubmit = () => {
-    // register(form)(authDispatch);
     login(form)(authDispatch);
   };
 
