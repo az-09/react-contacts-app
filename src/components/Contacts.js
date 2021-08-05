@@ -1,11 +1,13 @@
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  List, Placeholder, Image, Container,
+  List, Placeholder, Container, Message, Header,
 } from 'semantic-ui-react';
 import { GlobalContext } from '../context/Provider';
 import getContacts from '../services/getContacts';
 import ContactsHeader from './ContactsHeader';
+import Favorites from './Favorites';
+import ImageThumb from './ImageThumb';
 
 const ContactList = (contactsState) => {
   const {
@@ -18,6 +20,14 @@ const ContactList = (contactsState) => {
     <>
       <ContactsHeader />
       <Container>
+        <Header>STARRED</Header>
+
+        <Favorites
+          favorites={data.filter((item) => item.is_favorite)}
+          loading={loading}
+        />
+
+        <Header>ALL</Header>
         {loading && (
         <>
           {' '}
@@ -35,8 +45,12 @@ const ContactList = (contactsState) => {
           </Placeholder>
         </>
         )}
+        {!loading && data.length === 0 && (
+          <Message content="No Contacts Yet" />
+        )}
+
         <List>
-          {data.length && data.map((contact) => (
+          {data.length > 0 && data.length && data.map((contact) => (
             <List.Item key={contact.id}>
               <List.Content floated="right">
                 <span>
@@ -44,7 +58,13 @@ const ContactList = (contactsState) => {
                 </span>
               </List.Content>
               <List.Content style={{ display: 'flex', alignItems: 'center' }}>
-                <Image circular style={{ width: 45, height: 45 }} src={contact.picture_url} />
+                <ImageThumb
+                  firstName={contact.first_name}
+                  lastName={contact.last_name}
+                  src={contact.picture_url}
+                />
+                {/* <Image circular style={{ width: 45, height: 45 }}
+                src={contact.picture_url} /> */}
                 <span>
                   {contact.first_name}
                   {' '}
@@ -65,11 +85,13 @@ const Contacts = () => {
   const { contactsDispatch, contactsState } = useContext(GlobalContext);
 
   const history = useHistory();
-  // eslint-disable-next-line no-console
-  console.log('contacts.history', history);
+
+  const { contacts: { data } } = contactsState;
 
   useEffect(() => {
-    getContacts(history)(contactsDispatch);
+    if (data.length === 0) { // calls getContacts only when data is null
+      getContacts(history)(contactsDispatch);
+    }
   }, []);
   return (
     <ContactList state={contactsState} />

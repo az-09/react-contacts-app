@@ -34,25 +34,25 @@ const Register = () => {
               </Form.Field>
               <Form.Field>
                 <Form.Input
-                  value={form.firstname || ''}
+                  value={form.firstName || ''}
                   onChange={onChange}
-                  name="firstname"
+                  name="firstName"
                   placeholder="First Name"
                   label="First Name"
-                  error={fieldErrors.firstname && {
-                    content: fieldErrors.firstname, pointing: 'below',
+                  error={fieldErrors.firstName && {
+                    content: fieldErrors.firstName, pointing: 'below',
                   }}
                 />
               </Form.Field>
               <Form.Field>
                 <Form.Input
-                  value={form.lastname || ''}
+                  value={form.lastName || ''}
                   onChange={onChange}
-                  name="lastname"
+                  name="lastName"
                   placeholder="Last Name"
                   label="Last Name"
-                  error={fieldErrors.lastname && {
-                    content: fieldErrors.lastname, pointing: 'below',
+                  error={fieldErrors.lastName && {
+                    content: fieldErrors.lastName, pointing: 'below',
                   }}
                 />
               </Form.Field>

@@ -3,7 +3,7 @@ import { REGISTER_LOADING, REGISTER_SUCCESS, REGISTER_ERROR } from '../context/a
 
 const register = ({
   // eslint-disable-next-line camelcase
-  email, password, username, lastname: last_name, firstname: first_name,
+  email, password, username, lastName: last_name, firstName: first_name,
 
 }) => (authDispatch) => {
   authDispatch({

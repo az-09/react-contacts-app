@@ -2,9 +2,12 @@ import './App.css';
 import {
   BrowserRouter as Router, Switch, Route, useHistory,
 } from 'react-router-dom';
+import React, { useState } from 'react';
+
 import routes from './routes';
 import { GlobalProvider } from './context/Provider';
 import isAuthenticated from './utils/isAuthenticated';
+import UserLeaveConfirmation from './components/UserLeaveConfirmation';
 
 // eslint-disable-next-line react/prop-types
 const RenderRoute = (route) => {
@@ -30,9 +33,17 @@ const RenderRoute = (route) => {
 };
 
 function App() {
+  const [confirmOpen, setConfirmOpen] = useState(true);
+
   return (
     <GlobalProvider>
-      <Router>
+      <Router getUserConfirmation={(message, callback) => UserLeaveConfirmation(
+        message,
+        callback,
+        confirmOpen,
+        setConfirmOpen,
+      )}
+      >
         <Switch>
           {routes.map((route) => <RenderRoute {...route} key={route.title} />)}
         </Switch>

@@ -1,5 +1,6 @@
 import Contacts from './components/Contacts';
-import CreateContact from './components/CreateContact';
+import CreateContact from './components/CreateContacts';
+
 import Login from './components/Login';
 import Register from './components/Register';
 
@@ -17,17 +18,18 @@ const routes = [
     needsAuth: false,
   },
   {
-    path: '/',
-    component: Contacts,
-    title: 'Contacts',
-    needsAuth: true,
-  },
-  {
     path: '/contacts/create',
     component: CreateContact,
     title: 'Create Contact',
     needsAuth: true,
   },
+  {
+    path: '/',
+    component: Contacts,
+    title: 'Contacts',
+    needsAuth: true,
+  },
+
 ];
 
 export default routes;

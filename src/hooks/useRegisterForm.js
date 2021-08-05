@@ -29,8 +29,8 @@ export default () => {
   };
 
   const registerFormValid = !form.username?.length
-        || !form.firstname?.length
-        || !form.lastname?.length
+        || !form.firstName?.length
+        || !form.lastName?.length
         || !form.email?.length
         || !form.password?.length;
 

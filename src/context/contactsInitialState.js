@@ -4,8 +4,9 @@ export default {
     error: null,
     data: [],
   },
-  addContacts: {
+  addContact: {
     loading: false,
     error: null,
+    data: null,
   },
 };

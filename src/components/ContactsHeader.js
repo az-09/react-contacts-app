@@ -6,6 +6,7 @@ import {
 import logo from '../assets/images/logo.svg';
 import { GlobalContext } from '../context/Provider';
 import logout from '../services/logout';
+import isAuthenticated from '../utils/isAuthenticated';
 
 const ContactsHeader = () => {
   const { pathname } = useLocation();
@@ -31,8 +32,8 @@ const ContactsHeader = () => {
       </Menu.Item>
       )}
 
-      {pathname === '/' && (
-      <Menu.Item>
+      {isAuthenticated() && (
+      <Menu.Item position="right">
         {' '}
         <Button onClick={handleUserLogout} icon basic color="red">
           <Icon name="log out" />
