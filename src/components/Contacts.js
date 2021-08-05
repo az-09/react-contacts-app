@@ -12,9 +12,13 @@ import ImageThumb from './ImageThumb';
 const ContactList = (contactsState) => {
   const {
     state: {
-      contacts: { loading, data },
+      contacts: {
+        loading, data, isSearchActive, foundContacts,
+      },
     },
   } = contactsState;
+
+  const currentContacts = isSearchActive ? foundContacts : data;
 
   return (
     <>
@@ -23,7 +27,7 @@ const ContactList = (contactsState) => {
         <Header>STARRED</Header>
 
         <Favorites
-          favorites={data.filter((item) => item.is_favorite)}
+          favorites={currentContacts.filter((item) => item.is_favorite)}
           loading={loading}
         />
 
@@ -45,12 +49,13 @@ const ContactList = (contactsState) => {
           </Placeholder>
         </>
         )}
-        {!loading && data.length === 0 && (
-          <Message content="No Contacts Yet" />
+        {!loading && currentContacts.length === 0 && (
+          <Message content="No contacts to show." />
         )}
 
         <List>
-          {data.length > 0 && data.length && data.map((contact) => (
+          {currentContacts.length > 0 && currentContacts.length
+          && currentContacts.map((contact) => (
             <List.Item key={contact.id}>
               <List.Content floated="right">
                 <span>

@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import {
-  Button, Icon, Image, Menu,
+  Button, Icon, Image, Input, Menu,
 } from 'semantic-ui-react';
 import logo from '../assets/images/logo.svg';
 import { GlobalContext } from '../context/Provider';
 import logout from '../services/logout';
+import searchContacts from '../services/searchContacts';
 import isAuthenticated from '../utils/isAuthenticated';
 
 const ContactsHeader = () => {
@@ -17,14 +18,28 @@ const ContactsHeader = () => {
     logout(history)(contactsDispatch);
   };
 
+  const onChange = (e, { value }) => {
+    const searchText = value.trim().replace(/' '/g, '');
+
+    searchContacts(searchText)(contactsDispatch);
+  };
+
   // console.log("location", pathname)
   return (
 
     <Menu secondary pointing>
       <Image src={logo} width={60} />
       <Menu.Item as={Link} to="/" style={{ fontSize: 24 }}>ME Contacts</Menu.Item>
-      {pathname === '/' && (
+      {isAuthenticated() && (
+
       <Menu.Item position="right">
+        <Input style={{ width: 300 }} placeholder="Search Contacts" onChange={onChange} />
+      </Menu.Item>
+
+      )}
+
+      {pathname === '/' && (
+      <Menu.Item>
         <Button as={Link} to="/contacts/create" primary icon basic>
           <Icon name="add" />
           Create Contact

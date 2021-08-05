@@ -854,3 +854,100 @@ Video 22 React Tutorial. Create a carousel slider from scratch. Fully featured R
 
 - Favorites.js
 
+Video 24 React Context API Search Filter Tutorial. Implementing Global Search Feature.
+https://www.youtube.com/watch?v=eV6jBu-BNW0
+Video 25 React Context API Search Filter. Global Search feature Enhancements.
+https://www.youtube.com/watch?v=ooC5TZKSBR4
+
+- ContactsHeader.js
+...
+  const onChange = (e, { value }) => {
+    const searchText = value.trim().replace(/' '/g, '');
+
+    searchContacts(searchText)(contactsDispatch);
+  };
+...
+   {isAuthenticated() && (
+
+      <Menu.Item position="right">
+        <Input style={{ width: 300 }} placeholder="Search Contacts" onChange={onChange} />
+      </Menu.Item>
+
+      )}
+
+- searchContacts.js
+...
+export default (searchText) => (contactsDispatch) => {
+  contactsDispatch({
+    type: SEARCH_CONTACTS,
+    payload: searchText,
+  });
+};
+
+- actionTypes.js
+...
+export const SEARCH_CONTACTS = 'SEARCH_CONTACTS';
+
+
+- contactsInitialState.js
+  contacts: {
+    ...
+    isSearchActive: false,
+    foundContacts: [],
+  },
+
+- contactsReducer.js
+...
+case SEARCH_CONTACTS: {
+      const searchValue = payload?.toLowerCase();
+      return {
+        contacts: {
+          ...state.contacts,
+          loading: false,
+          isSearchActive: payload.length > 0 || false,
+          // eslint-disable-next-line max-len
+          foundContacts: state.contacts.data.filter((contact) => {
+            try { // to prevent special characters which result in breaking app
+              return (
+                contact.first_name.toLowerCase().search(searchValue) !== -1
+              || contact.last_name.toLowerCase().search(searchValue) !== -1
+              || contact.phone_number.toLowerCase().search(searchValue) !== -1);
+            } catch (error) {
+              return [];
+            }
+          }),
+        },
+      };
+    }
+
+- Contacts.js
+...
+  const {
+    state: {
+      contacts: {
+        ..., isSearchActive, foundContacts,
+      },
+    },
+  } = contactsState;
+
+  const currentContacts = isSearchActive ? foundContacts : data;
+
+  ...
+  <Favorites
+          favorites={currentContacts.filter((item) => item.is_favorite)}
+  ...
+
+    <List>
+      {currentContacts.length > 0 && currentContacts.length
+      && currentContacts.map((contact) => (
+
+
+- Favorites.js
+...
+    {!loading && favorites.length === 0 && (
+        <Message content="No contacts to show." />
+      )}
+
+
+
+

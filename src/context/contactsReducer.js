@@ -3,11 +3,11 @@ import {
   ADD_CONTACT_LOADING,
   ADD_CONTACT_SUCCESS,
   CLEAR_ADD_CONTACT,
-  CONTACTS_ERROR, CONTACTS_LOADING, CONTACTS_SUCCESS, LOGOUT_USER,
+  CONTACTS_ERROR, CONTACTS_LOADING, CONTACTS_SUCCESS, LOGOUT_USER, SEARCH_CONTACTS,
 } from './actionTypes';
 import contactsInitialState from './contactsInitialState';
 
-const contacts = (state, { type, payload }) => {
+const contactsReducer = (state, { type, payload }) => {
   switch (type) {
     case CONTACTS_LOADING: {
       return {
@@ -96,9 +96,31 @@ const contacts = (state, { type, payload }) => {
       };
     }
 
+    case SEARCH_CONTACTS: {
+      const searchValue = payload?.toLowerCase();
+      return {
+        contacts: {
+          ...state.contacts,
+          loading: false,
+          isSearchActive: payload.length > 0 || false,
+          // eslint-disable-next-line max-len
+          foundContacts: state.contacts.data.filter((contact) => {
+            try { // to prevent special characters which result in breaking app
+              return (
+                contact.first_name.toLowerCase().search(searchValue) !== -1
+              || contact.last_name.toLowerCase().search(searchValue) !== -1
+              || contact.phone_number.toLowerCase().search(searchValue) !== -1);
+            } catch (error) {
+              return [];
+            }
+          }),
+        },
+      };
+    }
+
     default:
       return state;
   }
 };
 
-export default contacts;
+export default contactsReducer;
