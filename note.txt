@@ -131,7 +131,7 @@ export default () => {
   // eslint-disable-next-line max-len
   const registerFormValid = !form.username?.length
         || !form.fistname?.length
-        || !form.lastname?.length
+        || !form.lastName?.length
         || !form.email?.length
         || !form.password?.length;
 
@@ -161,7 +161,7 @@ const RegisterForm = ({ form: { form, onChange, registerFormValid } }) => (
               <Form.Input value={form.fistname || ''} onChange={onChange} name="fistname" placeholder="First Name" label="First Name" />
             </Form.Field>
             <Form.Field>
-              <Form.Input value={form.lastname || ''} onChange={onChange} name="lastname" placeholder="Last Name" label="Last Name" />
+              <Form.Input value={form.lastName || ''} onChange={onChange} name="lastName" placeholder="Last Name" label="Last Name" />
             </Form.Field>
             <Form.Field>
               <Form.Input value={form.email || ''} onChange={onChange} name="email" type="email" placeholder="Email" label="Email" />
@@ -204,7 +204,7 @@ import { GlobalContext } from '../context/Provider';
 - register.js
 ...
 const register = ({
-  email, password, username, lastname: last_name, firstname: first_name,
+  email, password, username, lastName: last_name, firstName: first_name,
 }) => (dispatch) => {
   axiosInstance.post('/auth/register', {
     email, password, username, last_name, first_name,
@@ -232,7 +232,7 @@ https://www.youtube.com/watch?v=SoJ4Wk8ycoE
   -> register{email, password, ... }(authDispatch)
 
 - register.js
-const register = ({email, password, username, lastname: last_name, firstname: first_name}) => (authDispatch) => {
+const register = ({email, password, username, lastName: last_name, firstName: first_name}) => (authDispatch) => {
   authDispatch({
     type: REGISTER_LOADING,
   });
@@ -577,4 +577,280 @@ export default (history) => (contactsDispatch) => {
       history.push('/');
     }
   }, [data]);
+
+Video 15 Semantic UI React Tutorial. (Creating the Contact Form) Fully featured React Project Tutorial
+- CreateContact.js
+
+- countries.js
+
+Video 16 React Tutorial. Making a POST Request to a REST API (Save Contact).Tutorial 
+https://www.youtube.com/watch?v=uIyaWrkYan4
+- CreateContact.js
+const CreateContact = () => {
+  
+  const {form, onChange, createContactFormValid, onSubmit, loading, error} = useCreateContactForm();
+  ...
+
+- useCreateContactForm.js
+
+- createContact.js service using axios
+
+- contactsReducer.js
+   case ADD_CONTACT_LOADING: {
+   }
+
+    case ADD_CONTACT_ERROR: {
+    }
+
+    case ADD_CONTACT_SUCCESS: {
+    }
+
+    case CLEAR_ADD_CONTACT: {
+    }
+
+Video 17 React Tutorial. React router prompt example. Fully featured React Project Tutorial
+https://www.youtube.com/watch?v=2C5T8oUywbk
+- useCreateContactForm.js
+...
+  const formIsHalfFilled = Object.values(form).filter((item) => item && item !== '')?.length > 0;
+...
+  return {
+    ..., formIsHalfFilled,
+  };
+
+- CreateContact.js
+  const {
+    ..., formIsHalfFilled,
+  } = useCreateContactForm();
+
+...
+<Prompt when={formIsHalfFilled} message="You have unsaved changes, sure you wanna leave?" />
+
+Video 18 React Router Custom Confirm Prompt example. Fully featured React Project Tutorial 
+https://www.youtube.com/watch?v=LN5odEJLQzA
+
+- App.js
+...
+ const [confirmOpen, setConfirmOpen] = useState(true);
+
+  return (
+    <GlobalProvider>
+      <Router getUserConfirmation={(message, callback) => UserLeaveConfirmation(
+        message,
+        callback,
+        confirmOpen,
+        setConfirmOpen,
+      )}
+
+- UserLeaveConfirmation.js
+
+- CreateContact.js
+...
+     <Prompt
+        when={formIsHalfFilled}
+        message={JSON.stringify({
+          header: 'Confirm',
+          content: 'You have unsaved changes, are you sure?',
+        })}
+
+      />
+- 
+
+
+Video 19 React Firebase Tutorial. How to store and Retrieve images. Fully featured React Project Tutorial 
+https://www.youtube.com/watch?v=qRLCidiSOD4
+
+-F irebase.js
+
+- useCreateContactForm.js
+...
+const [tempFile, setTempFile] = useState(null);
+...
+const onImageChange = (e) => {
+    e.persist();
+    const fileURL = e.target.files[0];
+    setForm({ ...form, pictureURL: fileURL });
+
+    if (fileURL) {
+      setTempFile(URL.createObjectURL(fileURL));
+    }
+  };
+...
+  return {
+    ...
+    onImageChange,
+    tempFile,
+  };
+
+- CreateContact.js
+  const {
+    ...
+    onImageChange,
+    tempFile,
+
+  } = useCreateContactForm();
+
+  const imagePickRef = useRef(null);
+
+  const chooseImage = () => {
+    if (imagePickRef.current) {
+      imagePickRef.current.click();
+    }
+  };
+  ...
+     <input onChange={onImageChange} ref={imagePickRef} type="file" hidden />
+      {tempFile && <Image src={tempFile} />}
+      {!tempFile && (
+      <div>
+        <span>Choose Picture</span>
+      </div>
+      )}
+
+      <Icon name="pencil" onClick={chooseImage} />
+
+- createContact.js
+...
+import storage from '../helpers/firebase';
+...
+export default ({
+  ...
+  pictureURL: picture_url,
+}) 
+...
+ const saveToBackend = (url = null) => {
+    axiosInstance().post('/contacts/', {
+      last_name, first_name, phone_number, country_code, picture_url: url,
+    })
+      .then((res) => {
+        contactsDispatch({
+          type: ADD_CONTACT_SUCCESS,
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        contactsDispatch({
+          type: ADD_CONTACT_ERROR,
+          payload: err.response ? err.response.data : 'Could not connect',
+        });
+      });
+  };
+
+  if (picture_url) {
+    storage
+      .ref(`contact_image/${picture_url.name}`)
+      .put(picture_url)
+      .on('state_changed',
+      // must add snapshot and error, if not creating 3 contacts
+        (snapshot) => {},
+        async (error) => {},
+        async () => {
+          const url = await storage
+            .ref('contact_image')
+            .child(picture_url.name)
+            .getDownloadURL();
+          saveToBackend(url);
+        });
+  } else {
+    saveToBackend();
+  }
+
+  Viedo 20 React Context API Tutorial. API Request Optimisation and Enhancements. 
+  https://www.youtube.com/watch?v=OwH3HNzMKYM
+
+  - Contacts.js
+  ...
+  const { contacts: { data } } = contactsState;
+
+  useEffect(() => {
+    if (data.length === 0) { // calls getContacts only when data is null
+      getContacts(history)(contactsDispatch);
+    }
+  }, []);
+
+
+- CreateContact/index.css
+.form-column {
+    max-width: 650px;
+    margin-top: 15px;
+}
+
+.contact-picture {
+width: 175px;
+height: 175px;
+/* border: 1px solid gray; */
+margin: 15px auto;
+
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.image-wrapper {
+display: flex;
+
+}
+
+
+- CreateContact/index.js
+<input onChange={onImageChange} ref={imagePickRef} type="file" hidden />
+<div className="image-wrapper">
+  {tempFile && <Image src={tempFile} className="contact-picture" />}
+  {!tempFile && (
+  <div className="contact-picture">
+  {/* <span>Choose Picture</span> */}
+  <Image onClick={chooseImage} src="https://react.semantic-ui.com/images/wireframe/square-image.png" size="medium" rounded />
+  {/* <Icon name="pencil" onClick={chooseImage} /> */}
+  </div>
+  )}
+
+</div>
+
+Video 21 React Components Tutorial. Creating image thumbnails. Fully featured React Project Tutorial 
+- ImageThumb\index.js
+import React from 'react';
+import { Image } from 'semantic-ui-react';
+import './index.css';
+
+export default ({ firstName, lastName, src }) => {
+  const getInitials = () => {
+    if (firstName && lastName) {
+      return `${firstName[0]}${lastName[0]}`;
+    }
+    return '';
+  };
+
+  return (
+    <div className="thumbnail">
+      {src && (
+        <Image circular src={src} style={{ width: 45, height: 45 }} />
+      )}
+
+      {!src && (
+      <div>
+        <span>{getInitials()}</span>
+      </div>
+      )}
+    </div>
+  );
+};
+
+- ImageThumb\index.js
+
+- Contact.js
+   <List.Content style={{ display: 'flex', alignItems: 'center' }}>
+                <ImageThumb
+                  firstName={contact.first_name}
+                  lastName={contact.last_name}
+                  src={contact.picture_url}
+                />
+
+
+Video 22 React Tutorial. Create a carousel slider from scratch. Fully featured React Project 
+
+- Contacts.js
+...
+<Header>STARRED</Header>
+<Favorites favorites={data.filter((item) => item.is_favorite)} loading={loading} />
+
+- Favorites.js
 
