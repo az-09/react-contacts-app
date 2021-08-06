@@ -948,6 +948,58 @@ case SEARCH_CONTACTS: {
         <Message content="No contacts to show." />
       )}
 
+Video 26 React Context API Tutorial. Deleting items from API and state.
+https://www.youtube.com/watch?v=PWpF4GwWM1E
+
+-Contacts.js
+...
+  const { contactsDispatch } = useContext(GlobalContext);
+...
+  const handleDeleteContact = (id) => {
+    deleteContact(id)(contactsDispatch);
+  };
 
 
+...
+  <List.Item key={contact.id} disabled={contact.deleting}>
+      ...
+      <Button color="red" size="tiny" onClick={() => handleDeleteContact(contact.id)}>
+        <Icon name="delete" />
+      </Button>
 
+- deleteContacts.js
+
+- actionTypes.js
+...
+export const DELETE_CONTACT_LOADING = 'DELETE_CONTACT_LOADING';
+export const DELETE_CONTACT_SUCCESS = 'DELETE_CONTACT_SUCCESS';
+export const DELETE_CONTACT_ERROR = 'DELETE_CONTACT_ERROR';
+
+- contactsReducer.js
+...
+case DELETE_CONTACT_SUCCESS: {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          loading: false,
+          data: state.contacts.data.filter((contact) => contact.id !== payload),
+        },
+      };
+    }
+
+    case DELETE_CONTACT_LOADING: {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          loading: false,
+          data: state.contacts.data.map((contact) => {
+            if (contact.id === payload) {
+              return { ...contact, deleting: true };
+            }
+            return contact;
+          }),
+        },
+      };
+    }

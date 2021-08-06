@@ -1,9 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  List, Placeholder, Container, Message, Header,
+  List, Placeholder, Container, Message, Header, Button, Icon,
 } from 'semantic-ui-react';
 import { GlobalContext } from '../context/Provider';
+import deleteContact from '../services/deleteContact';
 import getContacts from '../services/getContacts';
 import ContactsHeader from './ContactsHeader';
 import Favorites from './Favorites';
@@ -18,7 +19,13 @@ const ContactList = (contactsState) => {
     },
   } = contactsState;
 
+  const { contactsDispatch } = useContext(GlobalContext);
+
   const currentContacts = isSearchActive ? foundContacts : data;
+
+  const handleDeleteContact = (id) => {
+    deleteContact(id)(contactsDispatch);
+  };
 
   return (
     <>
@@ -27,7 +34,7 @@ const ContactList = (contactsState) => {
         <Header>STARRED</Header>
 
         <Favorites
-          favorites={currentContacts.filter((item) => item.is_favorite)}
+          favorites={currentContacts?.filter((item) => item.is_favorite)}
           loading={loading}
         />
 
@@ -56,11 +63,14 @@ const ContactList = (contactsState) => {
         <List>
           {currentContacts.length > 0 && currentContacts.length
           && currentContacts.map((contact) => (
-            <List.Item key={contact.id}>
+            <List.Item key={contact.id} disabled={contact.deleting}>
               <List.Content floated="right">
                 <span>
                   {contact.phone_number}
                 </span>
+                <Button color="red" size="tiny" onClick={() => handleDeleteContact(contact.id)}>
+                  <Icon name="delete" />
+                </Button>
               </List.Content>
               <List.Content style={{ display: 'flex', alignItems: 'center' }}>
                 <ImageThumb

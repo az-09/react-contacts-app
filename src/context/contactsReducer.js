@@ -3,7 +3,13 @@ import {
   ADD_CONTACT_LOADING,
   ADD_CONTACT_SUCCESS,
   CLEAR_ADD_CONTACT,
-  CONTACTS_ERROR, CONTACTS_LOADING, CONTACTS_SUCCESS, LOGOUT_USER, SEARCH_CONTACTS,
+  CONTACTS_ERROR,
+  CONTACTS_LOADING,
+  CONTACTS_SUCCESS,
+  DELETE_CONTACT_LOADING,
+  DELETE_CONTACT_SUCCESS,
+  LOGOUT_USER,
+  SEARCH_CONTACTS,
 } from './actionTypes';
 import contactsInitialState from './contactsInitialState';
 
@@ -113,6 +119,33 @@ const contactsReducer = (state, { type, payload }) => {
             } catch (error) {
               return [];
             }
+          }),
+        },
+      };
+    }
+
+    case DELETE_CONTACT_SUCCESS: {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          loading: false,
+          data: state.contacts.data.filter((contact) => contact.id !== payload),
+        },
+      };
+    }
+
+    case DELETE_CONTACT_LOADING: {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          loading: false,
+          data: state.contacts.data.map((contact) => {
+            if (contact.id === payload) {
+              return { ...contact, deleting: true };
+            }
+            return contact;
           }),
         },
       };
