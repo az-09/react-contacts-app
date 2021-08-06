@@ -10,6 +10,7 @@ import {
   DELETE_CONTACT_SUCCESS,
   LOGOUT_USER,
   SEARCH_CONTACTS,
+  UPDATE_FAVORITE_SUCCESS,
 } from './actionTypes';
 import contactsInitialState from './contactsInitialState';
 
@@ -144,6 +145,21 @@ const contactsReducer = (state, { type, payload }) => {
           data: state.contacts.data.map((contact) => {
             if (contact.id === payload) {
               return { ...contact, deleting: true };
+            }
+            return contact;
+          }),
+        },
+      };
+    }
+
+    case UPDATE_FAVORITE_SUCCESS: {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          data: state.contacts.data.map((contact) => {
+            if (contact.id === payload.id) {
+              return payload;
             }
             return contact;
           }),

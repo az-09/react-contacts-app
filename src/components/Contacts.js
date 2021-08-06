@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
@@ -6,6 +7,7 @@ import {
 import { GlobalContext } from '../context/Provider';
 import deleteContact from '../services/deleteContact';
 import getContacts from '../services/getContacts';
+import updateFavorite from '../services/updateFavorite';
 import ContactsHeader from './ContactsHeader';
 import Favorites from './Favorites';
 import ImageThumb from './ImageThumb';
@@ -25,6 +27,10 @@ const ContactList = (contactsState) => {
 
   const handleDeleteContact = (id) => {
     deleteContact(id)(contactsDispatch);
+  };
+
+  const handleUpdateFavorite = (id, is_favorite) => {
+    updateFavorite(id, !is_favorite)(contactsDispatch);
   };
 
   return (
@@ -66,10 +72,15 @@ const ContactList = (contactsState) => {
             <List.Item key={contact.id} disabled={contact.deleting}>
               <List.Content floated="right">
                 <span>
+                  {contact.country_code}
+                  {' '}
                   {contact.phone_number}
                 </span>
                 <Button color="red" size="tiny" onClick={() => handleDeleteContact(contact.id)}>
                   <Icon name="delete" />
+                </Button>
+                <Button onClick={() => handleUpdateFavorite(contact.id, contact.is_favorite)}>
+                  {contact.is_favorite ? 'UnFavorite' : 'Favorite'}
                 </Button>
               </List.Content>
               <List.Content style={{ display: 'flex', alignItems: 'center' }}>
@@ -84,6 +95,7 @@ const ContactList = (contactsState) => {
                   {contact.first_name}
                   {' '}
                   {contact.last_name}
+                  {contact.is_favorite && <Icon name="heart" color="red" />}
                 </span>
               </List.Content>
 
@@ -108,6 +120,7 @@ const Contacts = () => {
       getContacts(history)(contactsDispatch);
     }
   }, []);
+
   return (
     <ContactList state={contactsState} />
   );
