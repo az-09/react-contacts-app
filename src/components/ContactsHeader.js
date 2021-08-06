@@ -3,7 +3,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import {
   Button, Icon, Image, Input, Menu,
 } from 'semantic-ui-react';
-import logo from '../assets/images/logo.svg';
+import logo from '../assets/images/logo.png';
 import { GlobalContext } from '../context/Provider';
 import logout from '../services/logout';
 import searchContacts from '../services/searchContacts';
