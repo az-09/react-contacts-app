@@ -1059,3 +1059,7 @@ const CreateContact = React.lazy(() => import('./components/CreateContacts'));
         </Switch>
       </Suspense>
 
+Video 29
+To redirect 
+- package.json
+"build": "react-scripts build && echo '/* /index.html 200' > ./build/_redirects",
