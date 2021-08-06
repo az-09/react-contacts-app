@@ -2,7 +2,7 @@ import './App.css';
 import {
   BrowserRouter as Router, Switch, Route, useHistory,
 } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 
 import routes from './routes';
 import { GlobalProvider } from './context/Provider';
@@ -44,9 +44,12 @@ function App() {
         setConfirmOpen,
       )}
       >
-        <Switch>
-          {routes.map((route) => <RenderRoute {...route} key={route.title} />)}
-        </Switch>
+        <Suspense fallback={<p>Loading</p>}>
+
+          <Switch>
+            {routes.map((route) => <RenderRoute {...route} key={route.title} />)}
+          </Switch>
+        </Suspense>
       </Router>
     </GlobalProvider>
   );

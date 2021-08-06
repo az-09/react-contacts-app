@@ -1003,3 +1003,59 @@ case DELETE_CONTACT_SUCCESS: {
         },
       };
     }
+
+Video 27 React Context API Tutorial. Editing Items. Fully featured React Project Tutorial 
+- Contacts.js
+...
+  const handleUpdateFavorite = (id, is_favorite) => {
+    updateFavorite(id, !is_favorite)(contactsDispatch);
+  };
+
+...
+  <Button onClick={() => handleUpdateFavorite(contact.id, contact.is_favorite)}>
+      {contact.is_favorite ? 'UnFavorite' : 'Favorite'}
+    </Button>
+...
+    <span>
+...
+    {contact.is_favorite && <Icon name="heart" color="red" />}
+    </span>
+
+- updateFavorite.js
+
+- actionTypes.js
+...
+export const UPDATE_FAVORITE_LOADING = 'UPDATE_FAVORITE_LOADING';
+export const UPDATE_FAVORITE_SUCCESS = 'UPDATE_FAVORITE_SUCCESS';
+export const UPDATE_FAVORITE_ERROR = 'UPDATE_FAVORITE_ERROR';
+
+- contactsReducer.js
+...
+    case UPDATE_FAVORITE_SUCCESS: {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          data: state.contacts.data.map((contact) => {
+            if (contact.id === payload.id) { // payload = res.data
+              return payload;
+            }
+            return contact;
+          }),
+        },
+      };
+    }
+
+Video 28 React Lazy Loading Tutorial with React Suspense. Fully featured React Project 
+- routes.js
+...
+const CreateContact = React.lazy(() => import('./components/CreateContacts'));
+
+- App.js
+...
+      <Suspense fallback={<p>Loading</p>}>
+        <Switch>
+          {routes.map((route) => <RenderRoute {...route} key={route.title} />)}
+        </Switch>
+      </Suspense>
+

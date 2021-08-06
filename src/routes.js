@@ -1,8 +1,12 @@
+import React from 'react';
+
 import Contacts from './components/Contacts';
-import CreateContact from './components/CreateContacts';
+// import CreateContact from './components/CreateContacts';
 
 import Login from './components/Login';
 import Register from './components/Register';
+
+const CreateContact = React.lazy(() => import('./components/CreateContacts'));
 
 const routes = [
   {
